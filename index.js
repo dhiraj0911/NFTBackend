@@ -3,6 +3,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const IPFS = require('ipfs-api');
+const fs = require('fs');
 
 const app = express();
 const port = 3001;
@@ -24,7 +25,18 @@ const ipfs = new IPFS({
 
 app.use(express.json());
 
-// Use a dynamic route parameter to receive the API endpoint from the frontend
+//read data from game.json and get api
+app.get('/games', async (req, res) => {
+  try {
+    const game = fs.readFileSync('game.json');
+    const gameData = JSON.parse(game);
+    res.json(gameData);
+  } catch (error) {
+    console.error('Error in fetch-assets:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.post('/fetch-assets/:endpoint', async (req, res) => {
   try {
     const { endpoint } = req.params;
@@ -52,13 +64,14 @@ app.post('/fetch-assets/:endpoint', async (req, res) => {
       const ipfsResult = await ipfs.files.add(buffer);
 
       // Return an object including the name, id, and ipfsHash
+      console.log(ipfsResult);
       return {
         name: gameAsset.name,
         description: gameAsset.description,
         id: gameAsset.id,
         ipfsHash: ipfsResult[0].hash
       };
-    }));  
+    }));
 
     res.json({ deployedAssets });
   } catch (error) {
