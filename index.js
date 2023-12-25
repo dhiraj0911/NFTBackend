@@ -2,30 +2,28 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-const IPFS = require('ipfs-api');
+const ipfs = require('./ipfs');
 const fs = require('fs');
+const vendorRoutes = require('./routes/vendorRoutes');
+const assetRoutes = require('./routes/assetRoutes');
+const myAssetRoutes = require('./routes/myAssetRoutes');
+const { connectDB } = require("./config/db");
 
+connectDB();
 const app = express();
 const port = 3001;
+
 app.use(cors());
-
-const projectId = "2PGfyuOFHN2WvcmenzYdipJ7LrY";
-const projectSecret = "1f5798a2398f8ac8e2c9e465a5abe053";
-
-const auth = 'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
-
-const ipfs = new IPFS({
-  host: 'ipfs.infura.io',
-  port: 5001,
-  protocol: 'https',
-  headers: {
-    authorization: auth,
-  },
-});
-
 app.use(express.json());
 
-//read data from game.json and get api
+app.get("/", (req, res) => {
+  res.json({ message: "API running..." });
+});
+
+app.use('/api/vendor', vendorRoutes);
+app.use('/api/assets', assetRoutes);
+app.use('/api/myAsset', myAssetRoutes);
+
 app.get('/games', async (req, res) => {
   try {
     const game = fs.readFileSync('game.json');
@@ -37,22 +35,18 @@ app.get('/games', async (req, res) => {
   }
 });
 
-// Use a dynamic route parameter to receive the API endpoint from the frontend
 app.post('/fetch-assets/:endpoint', async (req, res) => {
   try {
     const { endpoint } = req.params;
     const decodedEndpoint = decodeURIComponent(endpoint);
 
-    // Make a request to the provided API endpoint
     const response = await axios.get(decodedEndpoint);
     let dataItems = response.data;
 
-    // Ensure dataItems is always an array
     if (!Array.isArray(dataItems)) {
       dataItems = [dataItems];
     }
 
-    // Process each data point and save metadata to IPFS
     const deployedAssets = await Promise.all(dataItems.map(async (data) => {
       const gameAsset = {
         name: data.name,
@@ -60,11 +54,9 @@ app.post('/fetch-assets/:endpoint', async (req, res) => {
         id: data.id,
       };
 
-      // Upload JSON to IPFS
       const buffer = Buffer.from(JSON.stringify(gameAsset));
       const ipfsResult = await ipfs.files.add(buffer);
 
-      // Return an object including the name, id, and ipfsHash
       return {
         name: gameAsset.name,
         description: gameAsset.description,
