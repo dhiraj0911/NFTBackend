@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const Vendor = require('../models/vendor'); // Assuming your Vendor model is in '../models/vendor'
+const Vendor = require('../models/vendor');
 const { sendResponseError } = require('../middleware/middleware');
 const { checkPassword, newToken } = require('../utils/utilityFunction');
 
@@ -7,9 +7,8 @@ const signUpVendor = async (req, res) => {
   const { email, name, password, ethAddress } = req.body;
   try {
     const hash = await bcrypt.hash(password, 8);
-
-    await Vendor.create({...req.body, password: hash});
-    res.status(201).send('Successfully created vendor account');
+    await Vendor.create({...req.body ,password: hash});
+    res.status(201).json({ message: 'Successfully created vendor account' });
     return;
   } catch (err) {
     console.log('Error: ', err);
