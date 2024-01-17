@@ -1,17 +1,3 @@
-const IPFS = require('ipfs-api');
 
-const projectId = "2PGfyuOFHN2WvcmenzYdipJ7LrY";
-const projectSecret = "1f5798a2398f8ac8e2c9e465a5abe053";
-
-const auth = 'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
-
-const ipfs = new IPFS({
-  host: 'ipfs.infura.io',
-  port: 5001,
-  protocol: 'https',
-  headers: {
-    authorization: auth,
-  },
-});
 
 module.exports = ipfs;

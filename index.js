@@ -2,12 +2,20 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-const ipfs = require('./ipfs');
 const fs = require('fs');
+const FormData = require('form-data');
+
+const JWT = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJkZWQ1N2Y5YS03ZmNiLTQ0MDUtYTkzMy0zNjAzYjg3NDI4ZjciLCJlbWFpbCI6Im5lenVrbzE5NDlAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJGUkExIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9LHsiaWQiOiJOWUMxIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6IjI3MzNjNTUyYjE1ZTkzYzhiYmY2Iiwic2NvcGVkS2V5U2VjcmV0IjoiZjBhYTEwNjNmZjJlMWIwY2UwMTU5MGUxM2IwYWM5Y2FjZjMxOGJkZDE0NTliOTIzYjc2ZjU1ZGUzMThiNjRlNSIsImlhdCI6MTcwNTMyMzE4OX0.rOhUMLkh_50sKLNkB702yhwbwP8m-xaYqbCR1VhkxsU';
+
 const vendorRoutes = require('./routes/vendorRoutes');
 const assetRoutes = require('./routes/assetRoutes');
-const myAssetRoutes = require('./routes/myAssetRoutes');
-const { connectDB } = require("./config/db");
+const transactionRoutes = require('./routes/transactionRoutes');
+const activityLogRoutes = require('./routes/activityLogRoutes');
+const rentalRoutes = require('./routes/rentalRoutes');
+
+const {
+  connectDB
+} = require("./config/db");
 
 connectDB();
 const app = express();
@@ -17,12 +25,16 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.json({ message: "API running..." });
+  res.json({
+    message: "API running..."
+  });
 });
 
 app.use('/api/vendor', vendorRoutes);
 app.use('/api/assets', assetRoutes);
-app.use('/api/myAsset', myAssetRoutes);
+app.use('/api/transaction/', transactionRoutes);
+app.use("/api/rental", rentalRoutes);
+app.use('/api/logs', activityLogRoutes);
 
 app.get('/games', async (req, res) => {
   try {
@@ -31,44 +43,31 @@ app.get('/games', async (req, res) => {
     res.json(gameData);
   } catch (error) {
     console.error('Error in fetch-assets:', error.message);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({
+      error: 'Internal Server Error'
+    });
   }
 });
 
-app.post('/fetch-assets/:endpoint', async (req, res) => {
+app.post('/mint-asset', async (req, res) => {
   try {
-    const { endpoint } = req.params;
-    const decodedEndpoint = decodeURIComponent(endpoint);
+    let data = req.body;
+    let formData = new FormData();
 
-    const response = await axios.get(decodedEndpoint);
-    let dataItems = response.data;
+    const buffer = Buffer.from(JSON.stringify(data));
+    formData.append('file', buffer, { filename: `${data.id}.json`});
 
-    if (!Array.isArray(dataItems)) {
-      dataItems = [dataItems];
-    }
-
-    const deployedAssets = await Promise.all(dataItems.map(async (data) => {
-      const gameAsset = {
-        name: data.name,
-        description: data.description,
-        id: data.id,
-      };
-
-      const buffer = Buffer.from(JSON.stringify(gameAsset));
-      const ipfsResult = await ipfs.files.add(buffer);
-
-      return {
-        name: gameAsset.name,
-        description: gameAsset.description,
-        id: gameAsset.id,
-        ipfsHash: ipfsResult[0].hash
-      };
-    }));  
-
-    res.json({ deployedAssets });
+    const ipfsResult = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData, {
+      headers: {
+        'Authorization': JWT
+      }
+    })
+    console.log(ipfsResult.data);
+    return res.json({
+      ipfsResult: ipfsResult.data
+    });
   } catch (error) {
-    console.error('Error in fetch-assets:', error.message);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error in pining to IPFS:', error.message);
   }
 });
 

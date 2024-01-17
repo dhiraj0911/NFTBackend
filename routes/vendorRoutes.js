@@ -2,7 +2,7 @@ const express = require('express')
 const {
   signUpVendor,
   signInVendor,
-  getVendor,
+  // getVendor,
 } = require('../controller/vendorController')
 const {verifyUser} = require('../middleware/middleware')
 const router = express.Router()
@@ -10,6 +10,6 @@ const router = express.Router()
 router.post('/signup', signUpVendor)
 router.post('/signin', signInVendor)
 
-router.route('/me').get([verifyUser], getVendor)
+// router.post('/me', getVendor)
 
 module.exports = router
