@@ -35,8 +35,8 @@ const createAsset = async (req, res) => {
 // Update an existing asset
 const updateAsset = async (req, res) => {
   try {
-    const updatedAsset = await Asset.findByIdAndUpdate(
-      req.params.id,
+    const updatedAsset = await Asset.findOneAndUpdate(
+      { id: req.params.id },
       req.body,
       { new: true }
     );
