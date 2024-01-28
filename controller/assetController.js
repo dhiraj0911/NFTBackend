@@ -12,7 +12,7 @@ const getAssets = async (req, res) => {
 
 const getAssetById = async (req, res) => {
   try {
-    const asset = await Asset.findById(req.params.id).populate("Owner Seller");
+    const asset = await Asset.findOne(req.params.id).populate("owner seller");
 
     res.json(asset);
   } catch (error) {
