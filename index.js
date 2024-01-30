@@ -57,7 +57,7 @@ app.post('/api/mint-asset', async (req, res) => {
 
     const ipfsResult = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData, {
       headers: {
-        'Authorization': process.env.JWT
+        'Authorization': `Bearer ${process.env.JWT}`
       }
     })
     console.log(ipfsResult.data);
