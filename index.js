@@ -5,8 +5,6 @@ const cors = require('cors');
 const fs = require('fs');
 const FormData = require('form-data');
 
-const JWT = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJkZWQ1N2Y5YS03ZmNiLTQ0MDUtYTkzMy0zNjAzYjg3NDI4ZjciLCJlbWFpbCI6Im5lenVrbzE5NDlAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJGUkExIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9LHsiaWQiOiJOWUMxIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZSwic3RhdHVzIjoiQUNUSVZFIn0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6IjI3MzNjNTUyYjE1ZTkzYzhiYmY2Iiwic2NvcGVkS2V5U2VjcmV0IjoiZjBhYTEwNjNmZjJlMWIwY2UwMTU5MGUxM2IwYWM5Y2FjZjMxOGJkZDE0NTliOTIzYjc2ZjU1ZGUzMThiNjRlNSIsImlhdCI6MTcwNTMyMzE4OX0.rOhUMLkh_50sKLNkB702yhwbwP8m-xaYqbCR1VhkxsU';
-
 const vendorRoutes = require('./routes/vendorRoutes');
 const assetRoutes = require('./routes/assetRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
@@ -19,12 +17,12 @@ const {
 
 connectDB();
 const app = express();
-const port = 3001;
+const port = 5000;
 
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.json({
     message: "API running..."
   });
@@ -32,11 +30,11 @@ app.get("/", (req, res) => {
 
 app.use('/api/vendor', vendorRoutes);
 app.use('/api/assets', assetRoutes);
-app.use('/api/transaction/', transactionRoutes);
+app.use('/api/transaction', transactionRoutes);
 app.use("/api/rental", rentalRoutes);
 app.use('/api/logs', activityLogRoutes);
 
-app.get('/games', async (req, res) => {
+app.get('/api/games', async (req, res) => {
   try {
     const game = fs.readFileSync('game.json');
     const gameData = JSON.parse(game);
@@ -49,7 +47,7 @@ app.get('/games', async (req, res) => {
   }
 });
 
-app.post('/mint-asset', async (req, res) => {
+app.post('/api/mint-asset', async (req, res) => {
   try {
     let data = req.body;
     let formData = new FormData();
@@ -59,7 +57,7 @@ app.post('/mint-asset', async (req, res) => {
 
     const ipfsResult = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData, {
       headers: {
-        'Authorization': JWT
+        'Authorization': process.env.JWT
       }
     })
     console.log(ipfsResult.data);
@@ -72,5 +70,5 @@ app.post('/mint-asset', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on ${port}`);
 });
