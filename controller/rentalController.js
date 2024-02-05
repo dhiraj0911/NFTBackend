@@ -8,7 +8,9 @@ const createRental = async (req, res) => {
         res.status(201).json(newRental);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server Error' });
+        res.status(500).json({
+            message: 'Server Error'
+        });
     }
 };
 
@@ -19,32 +21,43 @@ const getRentals = async (req, res) => {
         res.json(rentals);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server Error' });
+        res.status(500).json({
+            message: 'Server Error'
+        });
     }
 };
 
-// Get a single rental by ID
 const getRentalById = async (req, res) => {
     try {
-        const rental = await Rental.findById(req.params.id).populate('nftId renter');
+        const rental = await Rental.findOne({ 'id': req.params.id }).populate('nftId renter');
         if (!rental) {
-            return res.status(404).json({ message: 'Rental not found' });
+            return res.status(404).json({
+                message: 'NFT not been rented earlier'
+            });
         }
         res.json(rental);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server Error' });
+        res.status(500).json({
+            message: 'Server Error'
+        });
     }
 };
 
 // Update a rental
 const updateRental = async (req, res) => {
     try {
-        const updatedRental = await Rental.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updatedRental = await Rental.findOneAndUpdate(
+            { id: req.params.id }, 
+            req.body, 
+            { new: true }
+        );
         res.json(updatedRental);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server Error' });
+        res.status(500).json({
+            message: 'Server Error'
+        });
     }
 };
 
@@ -52,10 +65,14 @@ const updateRental = async (req, res) => {
 const deleteRental = async (req, res) => {
     try {
         await Rental.findByIdAndDelete(req.params.id);
-        res.json({ message: 'Rental deleted successfully' });
+        res.json({
+            message: 'Rental deleted successfully'
+        });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server Error' });
+        res.status(500).json({
+            message: 'Server Error'
+        });
     }
 };
 
@@ -63,13 +80,17 @@ const deleteRental = async (req, res) => {
 const getActiveRentals = async (req, res) => {
     try {
         const currentDate = new Date();
-        const activeRentals = await Rental.find({ 
-            rentEndDate: { $gte: currentDate } // Greater than or equal to current date
+        const activeRentals = await Rental.find({
+            rentEndDate: {
+                $gte: currentDate
+            } // Greater than or equal to current date
         }).populate('nftId renter');
         res.json(activeRentals);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server Error' });
+        res.status(500).json({
+            message: 'Server Error'
+        });
     }
 };
 
@@ -77,15 +98,37 @@ const getActiveRentals = async (req, res) => {
 const getExpiredRentals = async (req, res) => {
     try {
         const currentDate = new Date();
-        const expiredRentals = await Rental.find({ 
-            rentEndDate: { $lt: currentDate } // Less than current date
+        const expiredRentals = await Rental.find({
+            rentEndDate: {
+                $lt: currentDate
+            } // Less than current date
         }).populate('nftId renter');
         res.json(expiredRentals);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server Error' });
+        res.status(500).json({
+            message: 'Server Error'
+        });
     }
 };
+
+const updateExpiredRentalsStatus = async () => {
+    try {
+        const currentDate = new Date();
+        const expiredRentals = await Rental.find({
+            rentEndDate: {
+                $lt: currentDate // Less than current date
+            }
+        });
+
+        console.log(expiredRentals);
+
+        console.log('Updated expired rentals status successfully!');
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 
 module.exports = {
     createRental,
@@ -94,5 +137,6 @@ module.exports = {
     updateRental,
     deleteRental,
     getActiveRentals,
-    getExpiredRentals
+    getExpiredRentals,
+    updateExpiredRentalsStatus
 };

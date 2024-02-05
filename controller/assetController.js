@@ -10,22 +10,22 @@ const getAssets = async (req, res) => {
   }
 };
 
-const getAssetById = async (req, res) => {
+const createAsset = async (req, res) => {
   try {
-    const asset = await Asset.findOne(req.params.id).populate("owner seller");
-
-    res.json(asset);
+    const newAsset = new Asset(req.body);
+    await newAsset.save();
+    res.status(201).json(newAsset);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-const createAsset = async (req, res) => {
+const getAssetById = async (req, res) => {
   try {
-    const newAsset = new Asset(req.body);
-    await newAsset.save();
-    res.status(201).json(newAsset);
+    const asset = await Asset.findOne({id: req.params.id}).populate("owner seller");
+
+    res.json(asset);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });

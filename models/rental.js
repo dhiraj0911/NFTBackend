@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const rentalSchema = new mongoose.Schema({
+    id: {
+        type: String,
+        required: true,
+        unique: true
+    },
     nftId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Asset',

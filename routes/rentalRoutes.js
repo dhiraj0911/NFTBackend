@@ -7,7 +7,8 @@ const {
     updateRental,
     deleteRental,
     getActiveRentals,
-    getExpiredRentals
+    getExpiredRentals,
+    updateExpiredRentalsStatus
 } = require('../controller/rentalController');
 
 router.post('/', createRental);
@@ -17,5 +18,6 @@ router.put('/:id', updateRental);
 router.delete('/:id', deleteRental);
 router.get('/active', getActiveRentals);
 router.get('/expired', getExpiredRentals);
+router.get('/update', updateExpiredRentalsStatus);
 
 module.exports = router;
