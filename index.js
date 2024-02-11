@@ -10,6 +10,7 @@ const assetRoutes = require('./routes/assetRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const activityLogRoutes = require('./routes/activityLogRoutes');
 const rentalRoutes = require('./routes/rentalRoutes');
+const { verifyUser } = require('./middleware/middleware')
 
 const {
   connectDB

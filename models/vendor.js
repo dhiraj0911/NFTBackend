@@ -11,11 +11,13 @@ const vendorSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    name: String,
     ethAddress: {
         type: String,
-        required: true,
         unique: true,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
     },
   },
   {
