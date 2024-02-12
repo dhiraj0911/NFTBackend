@@ -1,5 +1,5 @@
 const JWT = {
     jwt: `${process.env.JWT_SECRET}`,
-    jwtExp: '100d',
+    jwtExp: '7d',
 }
 module.exports = {JWT}
