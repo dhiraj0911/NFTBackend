@@ -1,8 +1,7 @@
 # service1/Dockerfile
 FROM node:20
 WORKDIR /app
-COPY package*.json ./
-RUN npm start
 COPY . .
+RUN npm start
 EXPOSE 5000
 CMD ["nodemon", "index.js"]
