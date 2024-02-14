@@ -14,6 +14,7 @@ const vendorSchema = new mongoose.Schema(
     ethAddress: {
         type: String,
         unique: true,
+        require: true
     },
     verified: {
       type: Boolean,
