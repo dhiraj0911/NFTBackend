@@ -6,10 +6,9 @@ const fs = require('fs');
 const FormData = require('form-data');
 
 const vendorRoutes = require('./routes/vendorRoutes');
+const addressRoutes = require('./routes/addressRoutes')
 const assetRoutes = require('./routes/assetRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
-const activityLogRoutes = require('./routes/activityLogRoutes');
-const rentalRoutes = require('./routes/rentalRoutes');
 const { verifyUser } = require('./middleware/middleware')
 
 const {
@@ -30,10 +29,9 @@ app.get("/api", (req, res) => {
 });
 
 app.use('/api/vendor', vendorRoutes);
+app.use('/api/address', addressRoutes);
 app.use('/api/assets', assetRoutes);
 app.use('/api/transaction', transactionRoutes);
-app.use("/api/rental", rentalRoutes);
-app.use('/api/logs', activityLogRoutes);
 
 app.get('/api/games', async (req, res) => {
   try {
