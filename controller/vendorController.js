@@ -90,6 +90,10 @@ const signInVendor = async (req, res) => {
       );
       return;
     }
+    if(!vendor.verified) {
+      res.status(200).send({ status: "you are not verified" });
+      return;
+    }
     const same = await checkPassword(password, vendor.password);
     if (same) {
       let token = newToken(vendor);

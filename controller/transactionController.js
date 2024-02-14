@@ -2,7 +2,7 @@ const Transaction = require("../models/transaction");
 
 const getTransactions = async (req, res) => {
     try {
-        const transactions = await Transaction.find().populate('nftId').populate('buyer seller');
+        const transactions = await Transaction.find().populate('assetId').populate('vendorId');
         res.json(transactions);
     } catch (error) {
         console.error(error);
@@ -12,7 +12,7 @@ const getTransactions = async (req, res) => {
 
 const getTransactionById = async (req, res) => {
     try {
-        const transaction = await Transaction.findById(req.params.id).populate('nftId').populate('buyer seller');
+        const transaction = await Transaction.findById(req.params.id).populate('assetId').populate('buyer seller');
         if (!transaction) {
             return res.status(404).json({ message: "Transaction not found" });
         }

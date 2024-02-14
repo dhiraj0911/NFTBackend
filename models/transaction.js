@@ -1,28 +1,20 @@
 const mongoose = require("mongoose");
 
 const transactionSchema = new mongoose.Schema({
-    nftId: {
+    assetId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Asset",
         required: true
     },
-    buyer: {
+    vendorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Vendor",
-        required: true
-    },
-    seller: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Vendor",
-        required: true
-    },
-    price: {
-        type: Number,
         required: true
     },
     transactionType: {
         type: String,
-        required: true
+        required: true,
+        enum: ['Buy', 'Resell', 'Create', 'Rent']
     },
     transactionDate: {
         type: Date,

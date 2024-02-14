@@ -2,7 +2,7 @@ const Asset = require("../models/asset");
 
 const getAssets = async (req, res) => {
   try {
-    const assets = await Asset.find({}).populate("owner seller");
+    const assets = await Asset.find({}).populate("owner renter");
     res.json(assets);
   } catch (error) {
     console.error(error);
@@ -23,7 +23,7 @@ const createAsset = async (req, res) => {
 
 const getAssetById = async (req, res) => {
   try {
-    const asset = await Asset.findOne({id: req.params.id}).populate("owner seller");
+    const asset = await Asset.findOne({id: req.params.id}).populate("owner renter");
 
     res.json(asset);
   } catch (error) {
@@ -32,7 +32,6 @@ const getAssetById = async (req, res) => {
   }
 };
 
-// Update an existing asset
 const updateAsset = async (req, res) => {
   try {
     const updatedAsset = await Asset.findOneAndUpdate(
@@ -50,7 +49,6 @@ const updateAsset = async (req, res) => {
   }
 };
 
-// Delete an asset
 const deleteAsset = async (req, res) => {
   try {
     const deletedAsset = await Asset.findByIdAndDelete(req.params.id);

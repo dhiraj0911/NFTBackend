@@ -2,22 +2,31 @@ const mongoose = require("mongoose");
 
 const assetSchema = mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String
-    },
-    id: {
-      type: String,
+    tokenId: {
+      type: Number,
       required: true,
-      unique: true,
+      unique: true
     },
     uri: {
       type: String,
       required: true,
       unique: true
+    },
+    rented: {
+      type: Boolean,
+      default: false
+    },
+    rentStart: {
+      type: Date,
+      default: null
+    },
+    rentEnd: {
+      type: Date,
+      default: null
+    },
+    sold: {
+      type: Boolean,
+      default: false
     },
     isForSale: {
       type: Boolean,
@@ -28,21 +37,23 @@ const assetSchema = mongoose.Schema(
       default: false
     },
     price: {
-      type: Number
+      type: Number,
+      default: null
     },
     rentPrice: {
-      type: Number
+      type: Number,
+      default: null
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Vendor",
       required: true,
     },
-    seller: {
+    renter: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Vendor",
-      required: true,
-    },
+      default: null
+    }
   },
   { timestamps: true }
 );
