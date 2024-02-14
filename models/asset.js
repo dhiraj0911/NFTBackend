@@ -36,6 +36,10 @@ const assetSchema = mongoose.Schema(
       type: Boolean,
       default: false
     },
+    isWETH: {
+      type: Boolean,
+      default: false
+    },
     price: {
       type: Number,
       default: null

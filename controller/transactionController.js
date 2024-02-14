@@ -12,7 +12,7 @@ const getTransactions = async (req, res) => {
 
 const getTransactionById = async (req, res) => {
     try {
-        const transaction = await Transaction.findById(req.params.id).populate('assetId').populate('buyer seller');
+        const transaction = await Transaction.findById(req.params.id).populate('assetId').populate('vendorId');
         if (!transaction) {
             return res.status(404).json({ message: "Transaction not found" });
         }
@@ -25,6 +25,11 @@ const getTransactionById = async (req, res) => {
 
 const createTransaction = async (req, res) => {
     try {
+        const validTypes = ['Buy', 'Resell', 'Create', 'Rent'];
+        if (!validTypes.includes(req.body.transactionType)) {
+            return res.status(400).json({ message: "Invalid transaction type" });
+        }
+
         const newTransaction = new Transaction(req.body);
         await newTransaction.save();
         res.status(201).json(newTransaction);
@@ -33,6 +38,7 @@ const createTransaction = async (req, res) => {
         res.status(500).json({ message: "Server Error" });
     }
 };
+
 
 module.exports = {
     getTransactions,

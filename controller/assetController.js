@@ -35,7 +35,7 @@ const getAssetById = async (req, res) => {
 const updateAsset = async (req, res) => {
   try {
     const updatedAsset = await Asset.findOneAndUpdate(
-      { id: req.params.id },
+      { tokenId: req.params.id },
       req.body,
       { new: true }
     );
