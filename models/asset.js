@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const assetSchema = mongoose.Schema(
   {
-    tokenId: {
-      type: Number,
+    id: {
+      type: String,
       required: true,
       unique: true
     },
