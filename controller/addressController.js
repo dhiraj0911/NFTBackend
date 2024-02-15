@@ -26,12 +26,15 @@ const getAddressById = async (req, res) => {
 
 const findOneFromVendorAndCreateAddress = async (req, res) => {
     try {
-        const vendor = await Vendor.findOne({ email: req.body.email });
-        if (!vendor) {
-            return res.status(404).json({ message: "Vendor not found" });
+        const address = await Address.findOne({ vendorId: req.params.vendorId });
+        if (address) {
+            return res.status(200).json({ message: "Address Already Store" });
         }
-        const address = await Address.create({ vendorId: vendor._id, address: req.body.address });
-        res.json(address);
+        const newAddress = new Address(req.body);
+        await newAddress.save();
+        res.status(201).json(newAddress);
+        // const address = await Address.create({ vendorId: req.body.vendorId, address: req.body.address });
+        // res.json(address);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server Error" });

@@ -14,7 +14,7 @@ const createAsset = async (req, res) => {
   try {
     const newAsset = new Asset(req.body);
     await newAsset.save();
-    res.status(201).json(newAsset);
+    res.status(201).json({asset: newAsset, id: newAsset._id});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
@@ -35,7 +35,7 @@ const getAssetById = async (req, res) => {
 const updateAsset = async (req, res) => {
   try {
     const updatedAsset = await Asset.findOneAndUpdate(
-      { tokenId: req.params.id },
+      { id: req.params.id },
       req.body,
       { new: true }
     );
