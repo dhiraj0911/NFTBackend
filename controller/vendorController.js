@@ -36,7 +36,11 @@ const signUpVendor = async (req, res) => {
 };
 
 const verifyVendor = async (req, res) => {
-  const { email, otp } = req.body;
+  const { email, otp, chanegPassword } = req.body;
+  let hash;
+  if (chanegPassword) {
+    hash = await bcrypt.hash(chanegPassword, 8);
+  }
   try {
     const response = await fetch(
       process.env.EMAIL_AUTH_PROVIDER_URL + "/verifyotp",
@@ -55,11 +59,15 @@ const verifyVendor = async (req, res) => {
       // Find the vendor by email and update the verified field to true
       const vendor = await Vendor.findOneAndUpdate(
         { email: email },
-        { verified: true },
+        chanegPassword ? { verified: true, password: hash } : { verified: true },
         { new: true }
       );
       if (!vendor) {
         sendResponseError(404, "Vendor not found", res);
+        return;
+      }
+      if (chanegPassword) {
+        res.status(200).send({ status: "ok", message: "Password changed successfully" });
         return;
       }
       const token = newToken(vendor);
@@ -90,7 +98,7 @@ const signInVendor = async (req, res) => {
       );
       return;
     }
-    if(!vendor.verified) {
+    if (!vendor.verified) {
       res.status(200).send({ status: "you are not verified" });
       return;
     }
@@ -108,4 +116,45 @@ const signInVendor = async (req, res) => {
   }
 };
 
-module.exports = { signUpVendor, signInVendor, verifyVendor };
+const forgotpassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    let vendor;
+    vendor = await Vendor.findOne({ email });
+    if (!vendor) {
+      sendResponseError(
+        400,
+        "No account found with the provided credentials. Please sign up first.",
+        res
+      );
+      return;
+    }
+    if (!vendor.verified) {
+      res.status(401).send({ status: "you are not verified" });
+      return;
+    }
+    else {
+      const response = await fetch(
+        process.env.EMAIL_AUTH_PROVIDER_URL + "/sendotp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+          }),
+        }
+      );
+      if (response.ok) {
+        res.status(201).json({ response: "OK" });
+        return;
+      }
+    }
+  } catch (err) {
+    console.log("Error:", err);
+    sendResponseError(500, `Error ${err}`, res);
+  }
+};
+
+module.exports = { signUpVendor, signInVendor, verifyVendor, forgotpassword };
