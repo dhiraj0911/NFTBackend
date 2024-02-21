@@ -15,6 +15,9 @@ const vendorSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    avatarurl: {
+      type: String,
+    }
   },
   {
     timestamps: true,

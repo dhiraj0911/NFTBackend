@@ -10,6 +10,9 @@ const addressSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    avatarurl: {
+        type: String,
+    }
 });
 
 const Address = mongoose.model("Address", addressSchema);
