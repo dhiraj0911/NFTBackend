@@ -72,7 +72,8 @@ const verifyVendor = async (req, res) => {
       }
       const token = newToken(vendor);
       const vendorId = vendor._id;
-      res.status(200).send({ status: "ok", token, vendorId });
+      let avatarurl = vendor.avatarurl || "";
+      res.status(200).send({ status: "ok", token, vendorId, avatarurl });
       return;
     } else {
       sendResponseError(400, "Invalid OTP", res);
@@ -106,7 +107,8 @@ const signInVendor = async (req, res) => {
     if (same) {
       let token = newToken(vendor);
       let vendorId = vendor._id;
-      res.status(200).send({ status: "ok", token, vendorId });
+      let avatarurl = vendor.avatarurl || "";
+      res.status(200).send({ status: "ok", token, vendorId, avatarurl });
       return;
     }
     sendResponseError(400, "Invalid password!", res);
