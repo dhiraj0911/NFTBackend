@@ -41,8 +41,23 @@ const findOneFromVendorAndCreateAddress = async (req, res) => {
     }
 }
 
+const getVendorInfofromAddress = async (req, res) => {
+    try {
+        const address = await Address.findOne({ address: req.params.address }).populate('vendorId');
+        if (!address) {
+            return res.status(404).json({ message: "Address not found" });
+        }
+        // If you want to return only vendor data
+        res.status(200).json(address.vendorId);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+}
+
 module.exports = {
     getAddresses,
     getAddressById,
     findOneFromVendorAndCreateAddress,
+    getVendorInfofromAddress,
 };

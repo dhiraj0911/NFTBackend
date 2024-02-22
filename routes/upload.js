@@ -18,7 +18,7 @@ router.post("/", upload.single("file"), async (req, res) => {
     return res.status(400).json({ message: "vendorId is required" });
   }
   try {
-    let vendor = await Address.findOne({ vendorId });
+    let vendor = await Vendor.findById(vendorId);
     if (!vendor) {
         return sendResponseError(
         400,
@@ -27,10 +27,6 @@ router.post("/", upload.single("file"), async (req, res) => {
       );
     }
     fileLocation = await uploadtos3(req.file);
-    await Address.findOneAndUpdate(
-      { vendorId: vendorId },
-      { avatarurl: fileLocation },
-    );
     await Vendor.findByIdAndUpdate(
         vendorId,
       { avatarurl: fileLocation },
