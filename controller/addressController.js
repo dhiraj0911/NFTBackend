@@ -27,9 +27,9 @@ const getAddressById = async (req, res) => {
 const findOneFromVendorAndCreateAddress = async (req, res) => {
     try {
         const { vendorId, address } = req.body;
-        const res = await Address.findOne({ vendorId: vendorId });
-        if (res) {
-            return res.status(200).json({ message: "Address Already Store" });
+        const addressResponse = await Address.findOne({ vendorId: vendorId });
+        if (addressResponse) {
+            return res.status(200).json({ message: "Address Already Stored" });
         }
         await Address.create({ vendorId: vendorId, address });
         res.status(201).json({ response: "OK" });
