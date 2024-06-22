@@ -1,53 +1,52 @@
 [
     {
-        "name": "Boogy Man",
-        "description": "/u/BoogyMan10's personal subreddit.",
-        "id": "t5_2s4qo"
+        "name": "Cryptid Commune",
+        "description": "A gathering spot for those intrigued by cryptids and legendary creatures.",
+        "id": "t5_xyzab"
     },
     {
-        "name": "Spooky Haven",
-        "description": "A chilling corner for all things eerie and mysterious.",
-        "id": "t5_abcde"
+        "name": "Eerie Emporium",
+        "description": "Step into a marketplace filled with the strange and supernatural.",
+        "id": "t5_bcdef"
     },
     {
-        "name": "Nightmare Nexus",
-        "description": "Dive into the dark and surreal world of /u/BoogyMan10.",
-        "id": "t5_fghij"
+        "name": "Phantasm Portal",
+        "description": "A gateway to discussions on ghosts, spirits, and the afterlife.",
+        "id": "t5_ghijk"
     },
     {
-        "name": "Haunt Hub",
-        "description": "Your go-to place for all things haunting and supernatural.",
-        "id": "t5_klmno"
+        "name": "Mystic Manor",
+        "description": "Enter a realm of magic, mystery, and the arcane.",
+        "id": "t5_lmnop"
     },
     {
-        "name": "Creepy Chronicles",
-        "description": "Explore spine-chilling tales and discussions in this subreddit.",
-        "id": "t5_pqrst"
+        "name": "Wraith World",
+        "description": "Explore the domain of wraiths, phantoms, and other spectral beings.",
+        "id": "t5_qrstu"
     },
     {
-        "name": "Eldritch Enclave",
-        "description": "Where the mysterious and the bizarre converge.",
-        "id": "t5_uvwxz"
+        "name": "Enigma Enclave",
+        "description": "Unveil the secrets of the unknown and the unexplained.",
+        "id": "t5_vwxyz"
     },
     {
-        "name": "Phantom Forum",
-        "description": "Discuss the unseen and the unknown with fellow enthusiasts.",
-        "id": "t5_12345"
+        "name": "Ghastly Grove",
+        "description": "Wander through tales and encounters with the ghastly and ghostly.",
+        "id": "t5_abc12"
     },
     {
-        "name": "Spectral Sanctuary",
-        "description": "A subreddit dedicated to the ethereal and otherworldly.",
-        "id": "t5_67890"
+        "name": "Shadow Society",
+        "description": "Join a community devoted to the study of shadows and the unseen.",
+        "id": "t5_def34"
     },
     {
-        "name": "Ghostly Gathering",
-        "description": "Join the community for ghost stories, folklore, and more.",
-        "id": "t5_qwerty"
+        "name": "Apparition Alley",
+        "description": "Discover the world of apparitions and haunting visions.",
+        "id": "t5_ghi56"
     },
     {
-        "name": "Supernatural Society",
-        "description": "Connect with like-minded individuals in the realm of the supernatural.",
-        "id": "t5_asdfg"
+        "name": "Ethereal Exchange",
+        "description": "Trade stories and insights about the ethereal and otherworldly.",
+        "id": "t5_jkl78"
     }
-
 ]
